@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRMDataManager", "RRMDataMa
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "RRMData", "RRMData\RRMData.sqlproj", "{8B856749-9BB8-4C9E-B004-871374DC3753}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRMDesktopWPF", "RRMDesktopWPF\RRMDesktopWPF.csproj", "{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{8B856749-9BB8-4C9E-B004-871374DC3753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B856749-9BB8-4C9E-B004-871374DC3753}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B856749-9BB8-4C9E-B004-871374DC3753}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
