@@ -7,25 +7,27 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     >
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
 
-        <!--  Title  -->
-        <TextBlock
+		<!--  Title  -->
+		<TextBlock
             Grid.Row="0"
-            Grid.Column="0"
+            Grid.Column="1"
             Grid.ColumnSpan="3"
             Margin="15"
             HorizontalAlignment="Center"
@@ -34,112 +36,112 @@
             Text="Sales Page"
             />
 
-        <!--  Left Section  -->
-        <TextBlock
+		<!--  Left Section  -->
+		<TextBlock
             Grid.Row="1"
-            Grid.Column="0"
+            Grid.Column="1"
             Margin="10,0"
             HorizontalAlignment="Center"
             Text="Products"
             />
-        <ListBox
+		<ListBox
             x:Name="Products"
             Grid.Row="2"
             Grid.RowSpan="2"
-            Grid.Column="0"
+            Grid.Column="1"
             MinWidth="150"
             Margin="10,0"
             />
 
-        <!--  Center section  -->
-        <TextBlock
+		<!--  Center section  -->
+		<TextBlock
             Grid.Row="1"
-            Grid.Column="1"
+            Grid.Column="2"
             Margin="10,0"
             HorizontalAlignment="Center"
             Text="Quantity"
             />
-        <StackPanel
+		<StackPanel
             Grid.Row="2"
-            Grid.Column="1"
+            Grid.Column="2"
             Margin="10,0"
             Orientation="Vertical"
             >
-            <TextBox
+			<TextBox
                 x:Name="ItemQuantity"
                 MinWidth="100"
                 Margin="0,0,0,10"
                 Padding="5"
                 />
-            <Button
+			<Button
                 x:Name="AddToCart"
                 Margin="0,0,0,5"
                 Padding="5"
                 Content="Add to cart"
                 />
-            <Button
+			<Button
                 x:Name="RemoveFromCart"
                 Padding="5"
                 Content="Remove from cart"
                 />
-        </StackPanel>
+		</StackPanel>
 
-        <!--  Right section  -->
-        <TextBlock
+		<!--  Right section  -->
+		<TextBlock
             Grid.Row="1"
-            Grid.Column="2"
+            Grid.Column="3"
             Margin="10,0"
             HorizontalAlignment="Center"
             Text="Cart"
             />
-        <ListBox
+		<ListBox
             x:Name="Cart"
             Grid.Row="2"
             Grid.RowSpan="2"
-            Grid.Column="2"
+            Grid.Column="3"
             MinWidth="150"
             MinHeight="200"
             Margin="10,0"
             />
-        <StackPanel
+		<StackPanel
             Grid.Row="4"
-            Grid.Column="2"
+            Grid.Column="3"
             Margin="10,10,10,0"
             >
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <TextBlock Text="Subtotal:&#160;&#160;&#160;$" />
-                <TextBlock x:Name="Subtotal" Text="0.00" />
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <TextBlock Text="Tax:&#160;&#160;&#160;$" />
-                <TextBlock x:Name="Tax" Text="0.00" />
-            </StackPanel>
-            <Canvas
+			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+				<TextBlock Text="Subtotal:&#160;&#160;&#160;$" />
+				<TextBlock x:Name="Subtotal" Text="0.00" />
+			</StackPanel>
+			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+				<TextBlock Text="Tax:&#160;&#160;&#160;$" />
+				<TextBlock x:Name="Tax" Text="0.00" />
+			</StackPanel>
+			<Canvas
                 Width="0"
                 Margin="0,10"
                 HorizontalAlignment="Left"
                 ClipToBounds="false"
                 >
-                <Line
+				<Line
                     Stroke="Black"
                     StrokeDashArray="6 2"
                     X2="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}}"
                     />
-            </Canvas>
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <TextBlock Text="Total:&#160;&#160;&#160;$" />
-                <TextBlock x:Name="Total" Text="0.00" />
-            </StackPanel>
-        </StackPanel>
+			</Canvas>
+			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+				<TextBlock Text="Total:&#160;&#160;&#160;$" />
+				<TextBlock x:Name="Total" Text="0.00" />
+			</StackPanel>
+		</StackPanel>
 
-        <Button
+		<Button
             x:Name="Checkout"
             Grid.Row="5"
-            Grid.Column="2"
+            Grid.Column="3"
             Margin="10"
             Padding="5"
             Content="Checkout"
             />
 
-    </Grid>
+	</Grid>
 </UserControl>

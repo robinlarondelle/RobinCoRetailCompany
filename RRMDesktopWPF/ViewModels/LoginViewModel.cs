@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+
+using RRMDesktopWPF.EventModels;
 using RRMDesktopWPF.Library.Api;
 using RRMDesktopWPF.Library.Models;
 using RRMDesktopWPF.Utils;
@@ -13,10 +15,12 @@ namespace RRMDesktopWPF.ViewModels
         private string _password;
         private readonly IApiHelper _apiHelper;
         private string _errorMessage;
+        private IEventAggregator _event;
 
-        public LoginViewModel(IApiHelper apiHelper)
+        public LoginViewModel(IApiHelper apiHelper, IEventAggregator eventAggregator)
         {
             _apiHelper = apiHelper;
+            _event = eventAggregator;
         }
 
         public string Username
@@ -69,6 +73,8 @@ namespace RRMDesktopWPF.ViewModels
                 ErrorMessage = "";
                 AuthenticatedUser result = await _apiHelper.Authenticate(Username, Password);
                 await _apiHelper.GetLoggedInUserInformation(result.Access_Token);
+                await _event.PublishOnUIThreadAsync(new LoginEvent());
+                     
                 //Capture more information about the user
                 /*LoggedInUserModel loggedInUserModel;*/
             }

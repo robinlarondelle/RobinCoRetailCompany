@@ -7,7 +7,6 @@ namespace RRMDesktopWPF.ViewModels
 	public class SalesViewModel : Screen
 	{
 		private BindingList<string> _products;
-
 		public BindingList<string> Products
 		{
 			get { return _products; }
@@ -18,9 +17,8 @@ namespace RRMDesktopWPF.ViewModels
 			}
 		}
 
-		private string _itemQuantity;
-
-		public string ItemQuantity
+		private int _itemQuantity;
+		public int ItemQuantity
 		{
 			get { return _itemQuantity; }
 			set
@@ -31,7 +29,6 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 		private BindingList<string> _cart;
-
 		public BindingList<string> Cart
 		{
 			get { return _cart; }
@@ -50,6 +47,7 @@ namespace RRMDesktopWPF.ViewModels
 				return "0.00";
 			}
 		}
+
 		public string Tax
 		{
 			get
@@ -58,6 +56,7 @@ namespace RRMDesktopWPF.ViewModels
 				return "0.00";
 			}
 		}
+
 		public string Total
 		{
 			get
@@ -77,10 +76,12 @@ namespace RRMDesktopWPF.ViewModels
 			}
 
 		}
+
 		public void AddToCart()
 		{
 
 		}
+
 		public bool CanRemoveFromCart
 		{
 			get
@@ -91,6 +92,7 @@ namespace RRMDesktopWPF.ViewModels
 			}
 
 		}
+
 		public void RemoveFromCart()
 		{
 
@@ -105,6 +107,7 @@ namespace RRMDesktopWPF.ViewModels
 			}
 
 		}
+
 		public void Checkout()
 		{
 

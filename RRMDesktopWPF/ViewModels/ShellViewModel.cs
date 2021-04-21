@@ -1,12 +1,28 @@
-﻿using Caliburn.Micro;
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+using Caliburn.Micro;
+
+using RRMDesktopWPF.EventModels;
 
 namespace RRMDesktopWPF.ViewModels
 {
-	public class ShellViewModel : Conductor<object>
+	public class ShellViewModel : Conductor<object>, IHandle<LoginEvent>
 	{
-		public ShellViewModel( LoginViewModel loginViewModel )
+		private IEventAggregator _event;
+		private SalesViewModel _salesViewModel;
+		private SimpleContainer _simpleContainer;
+
+		public ShellViewModel( SalesViewModel salesViewModel , IEventAggregator eventAggregator , SimpleContainer simpleContainer )
 		{
-			ActivateItemAsync( loginViewModel );
+			_event = eventAggregator;
+			_salesViewModel = salesViewModel;
+			_simpleContainer = simpleContainer;
+
+			_event.SubscribeOnUIThread( this );
+			ActivateItemAsync( _simpleContainer.GetInstance<LoginViewModel>() );
 		}
+
+		public Task HandleAsync( LoginEvent message , CancellationToken cancellationToken ) => ActivateItemAsync( _salesViewModel );
 	}
 }

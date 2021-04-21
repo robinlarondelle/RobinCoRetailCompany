@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:RRMDesktopWPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="ShellView"
-    Width="800"
-    Height="450"
+    Width="1000"
+    Height="600"
     FontSize="18"
     mc:Ignorable="d"
     >
@@ -19,7 +19,7 @@
             </MenuItem>
         </Menu>
         <Grid>
-            <ContentControl x:Name="ActiveItem" Margin="5" />
+            <ContentControl x:Name="ActiveItem" Margin="20 5 20 20" />
         </Grid>
     </DockPanel>
 </Window>
