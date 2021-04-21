@@ -23,7 +23,7 @@ namespace RRMDataManager.Controllers
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
-        private const string LocalLoginProvider = "Local";
+        private const string _localLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
         public AccountController()
@@ -62,7 +62,7 @@ namespace RRMDataManager.Controllers
             {
                 Email = User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                LoginProvider = externalLogin?.LoginProvider
             };
         }
 
@@ -100,14 +100,14 @@ namespace RRMDataManager.Controllers
             {
                 logins.Add(new UserLoginInfoViewModel
                 {
-                    LoginProvider = LocalLoginProvider,
+                    LoginProvider = _localLoginProvider,
                     ProviderKey = user.UserName,
                 });
             }
 
             return new ManageInfoViewModel
             {
-                LocalLoginProvider = LocalLoginProvider,
+                LocalLoginProvider = _localLoginProvider,
                 Email = user.UserName,
                 Logins = logins,
                 ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
@@ -202,7 +202,7 @@ namespace RRMDataManager.Controllers
 
             IdentityResult result;
 
-            if (model.LoginProvider == LocalLoginProvider)
+            if (model.LoginProvider == _localLoginProvider)
             {
                 result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
             }
@@ -308,8 +308,8 @@ namespace RRMDataManager.Controllers
                         response_type = "token",
                         client_id = Startup.PublicClientId,
                         redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
-                        state = state
-                    }),
+						state
+					} ),
                     State = state
                 };
                 logins.Add(login);
@@ -328,7 +328,7 @@ namespace RRMDataManager.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+			ApplicationUser user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -351,13 +351,13 @@ namespace RRMDataManager.Controllers
                 return BadRequest(ModelState);
             }
 
-            var info = await Authentication.GetExternalLoginInfoAsync();
+			ExternalLoginInfo info = await Authentication.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+			ApplicationUser user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)
@@ -428,10 +428,12 @@ namespace RRMDataManager.Controllers
 
             public IList<Claim> GetClaims()
             {
-                IList<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, ProviderKey, null, LoginProvider));
+				IList<Claim> claims = new List<Claim>
+				{
+					new Claim( ClaimTypes.NameIdentifier , ProviderKey , null , LoginProvider )
+				};
 
-                if (UserName != null)
+				if (UserName != null)
                 {
                     claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
                 }
@@ -470,7 +472,7 @@ namespace RRMDataManager.Controllers
 
         private static class RandomOAuthStateGenerator
         {
-            private static RandomNumberGenerator _random = new RNGCryptoServiceProvider();
+            private static readonly RandomNumberGenerator _random = new RNGCryptoServiceProvider();
 
             public static string Generate(int strengthInBits)
             {

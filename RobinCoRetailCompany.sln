@@ -9,6 +9,10 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "RRMData", "RRMData\RRMData.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRMDesktopWPF", "RRMDesktopWPF\RRMDesktopWPF.csproj", "{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRMDataManager.Library", "RRMDataManager.Library\RRMDataManager.Library.csproj", "{F2432946-9CB9-4F46-9B8E-F021036AA248}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRMDesktopWPF.Library", "RRMDesktopWPF.Library\RRMDesktopWPF.Library.csproj", "{0BF4F018-CE03-4B2F-BDAD-45626D1BEBF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,14 @@ Global
 		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2432946-9CB9-4F46-9B8E-F021036AA248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2432946-9CB9-4F46-9B8E-F021036AA248}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2432946-9CB9-4F46-9B8E-F021036AA248}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2432946-9CB9-4F46-9B8E-F021036AA248}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BF4F018-CE03-4B2F-BDAD-45626D1BEBF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF4F018-CE03-4B2F-BDAD-45626D1BEBF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BF4F018-CE03-4B2F-BDAD-45626D1BEBF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BF4F018-CE03-4B2F-BDAD-45626D1BEBF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
