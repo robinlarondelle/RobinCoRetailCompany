@@ -5,13 +5,13 @@ using RRMDataManager.Library.Models;
 
 namespace RRMDataManager.Library.DataAccess
 {
-	public class UserData
+	public class ProductData
 	{
-		public List<UserModel> GetUserByID( string ID )
+		public List<ProductModel> GetProducts()
 		{
 			SqlDataAccess sql = new SqlDataAccess();
 
-			List<UserModel> output = sql.LoadData<UserModel , dynamic>( "SPUserLookup" , new { Id = ID } , "RRMData" );
+			List<ProductModel> output = sql.LoadData<ProductModel , dynamic>( "SPProduct_GetAll" , null , "RRMData" );
 
 			return output;
 		}

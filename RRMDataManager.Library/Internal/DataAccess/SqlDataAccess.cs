@@ -19,7 +19,7 @@ namespace RRMDataManager.Library.Internal.DataAccess
 			{
 				List<T> rows = connection.Query<T>( storedProcedure , parameters , commandType: CommandType.StoredProcedure ).ToList();
 				return rows;
-			} 
+			}
 		}
 
 		public void SaveData<T>( string storedProcedure , T parameters , string connectionStringName )

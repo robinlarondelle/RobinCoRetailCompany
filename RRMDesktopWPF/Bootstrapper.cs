@@ -31,7 +31,9 @@ namespace RRMDesktopWPF
 
 		protected override void Configure()
 		{
-			_container.Instance( _container );
+			_container
+				.Instance( _container )
+				.PerRequest<IProductEndpoint , ProductEndpoint>();
 
 			//Tell the DI container what concrete implementations to use for each Interface
 			_container

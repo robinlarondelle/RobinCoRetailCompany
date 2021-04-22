@@ -10,7 +10,7 @@ namespace RRMDesktopWPF.Library.Api
 {
     public class ApiHelper : IApiHelper
     {
-        private HttpClient ApiClient { get; set; }
+        private HttpClient _apiClient { get; set; }
         private ILoggedInUserModel _loggedInUserModel { get; set; }
 
         public ApiHelper(ILoggedInUserModel loggedInUserModel)
@@ -19,12 +19,17 @@ namespace RRMDesktopWPF.Library.Api
             _loggedInUserModel = loggedInUserModel;
         }
 
+        public HttpClient ApiClient
+		{
+            get => _apiClient;
+		}
+
         private void InitializeHttpClient()
         {
             string api = ConfigurationManager.AppSettings[ "api" ];
-            ApiClient = new HttpClient {BaseAddress = new Uri(api)};
-            ApiClient.DefaultRequestHeaders.Accept.Clear();
-            ApiClient.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+            _apiClient = new HttpClient {BaseAddress = new Uri(api)};
+            _apiClient.DefaultRequestHeaders.Accept.Clear();
+            _apiClient.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
         }
 
         public async Task<AuthenticatedUser> Authenticate( string username , string password )
@@ -36,7 +41,7 @@ namespace RRMDesktopWPF.Library.Api
                 new KeyValuePair<string, string>("password", password),
             } );
 
-            using ( HttpResponseMessage response = await ApiClient.PostAsync( "/token" , data ) )
+            using ( HttpResponseMessage response = await _apiClient.PostAsync( "/token" , data ) )
             {
                 if ( response.IsSuccessStatusCode )
                 {
@@ -54,12 +59,12 @@ namespace RRMDesktopWPF.Library.Api
 
         public async Task GetLoggedInUserInformation(string token)
         {
-            ApiClient.DefaultRequestHeaders.Clear();
-            ApiClient.DefaultRequestHeaders.Accept.Clear();
-            ApiClient.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-            ApiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer { token }");
+            _apiClient.DefaultRequestHeaders.Clear();
+            _apiClient.DefaultRequestHeaders.Accept.Clear();
+            _apiClient.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+            _apiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer { token }");
 
-            using (HttpResponseMessage response = await ApiClient.GetAsync("/api/User"))
+            using (HttpResponseMessage response = await _apiClient.GetAsync("/api/User"))
             {
                 if (response.IsSuccessStatusCode)
                 {

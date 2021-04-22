@@ -1,13 +1,18 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 using Caliburn.Micro;
+
+using RRMDesktopWPF.Library.Api;
+using RRMDesktopWPF.Library.Models;
 
 namespace RRMDesktopWPF.ViewModels
 {
 	public class SalesViewModel : Screen
 	{
-		private BindingList<string> _products;
-		public BindingList<string> Products
+		private BindingList<ProductModel> _products;
+		public BindingList<ProductModel> Products
 		{
 			get { return _products; }
 			set
@@ -29,6 +34,7 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 		private BindingList<string> _cart;
+
 		public BindingList<string> Cart
 		{
 			get { return _cart; }
@@ -64,6 +70,25 @@ namespace RRMDesktopWPF.ViewModels
 				//replace with calculation
 				return "0.00";
 			}
+		}
+		private IProductEndpoint _productEndpoint;
+
+		public SalesViewModel( IProductEndpoint productEndpoint )
+		{
+			_productEndpoint = productEndpoint;
+
+		}
+
+		protected override async void OnViewLoaded( object view )
+		{
+			base.OnViewLoaded( view );
+			await InitializeProducts();
+		}
+
+		private async Task InitializeProducts()
+		{
+			List<ProductModel> productsList = await _productEndpoint.GetAllProductsAsync();
+			Products = new BindingList<ProductModel>( productsList );
 		}
 
 		public bool CanAddToCart
