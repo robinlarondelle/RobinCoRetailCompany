@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using Caliburn.Micro;
 
 using RRMDesktopWPF.Library.Api;
+using RRMDesktopWPF.Library.Helpers;
 using RRMDesktopWPF.Library.Models;
 using RRMDesktopWPF.Utils;
 using RRMDesktopWPF.ViewModels;
@@ -37,10 +38,11 @@ namespace RRMDesktopWPF
 
 			//Tell the DI container what concrete implementations to use for each Interface
 			_container
-				.Singleton<IWindowManager, WindowManager>()
-				.Singleton<IEventAggregator, EventAggregator>()
-				.Singleton<IApiHelper, ApiHelper>()
-				.Singleton<ILoggedInUserModel, LoggedInUserModel>();
+				.Singleton<IWindowManager , WindowManager>()
+				.Singleton<IEventAggregator , EventAggregator>()
+				.Singleton<IApiHelper , ApiHelper>()
+				.Singleton<ILoggedInUserModel , LoggedInUserModel>()
+				.Singleton<IConfigHelper , ConfigHelper>();
 
 			GetType().Assembly.GetTypes() //Get all the types
 				.Where( ( type ) => type.IsClass ) //Filter all the types of this applications by IsClass

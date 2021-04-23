@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 
 using RRMDesktopWPF.Library.Api;
+using RRMDesktopWPF.Library.Helpers;
 using RRMDesktopWPF.Library.Models;
 
 namespace RRMDesktopWPF.ViewModels
@@ -13,7 +14,7 @@ namespace RRMDesktopWPF.ViewModels
 	public class SalesViewModel : Screen
 	{
 		private readonly IProductEndpoint _productEndpoint;
-
+		private readonly IConfigHelper _configHelper;
 
 		private BindingList<ProductModel> _products;
 		public BindingList<ProductModel> Products
@@ -64,44 +65,22 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-
-		public string Subtotal
-		{
-			get
-			{
-				decimal subTotal = 0;
-
-				foreach ( CartItemModel item in Cart )
-				{
-					subTotal += item.Product.RetailPrice * item.QuantityInCart;
-				}
-
-				return subTotal.ToString( "C" );
-			}
-		}
-
-		public string Tax
-		{
-			get
-			{
-				//replace with calculation
-				return "0.00";
-			}
-		}
-
+		public string Subtotal => CalculateSubTotal().ToString("C");
+		public string Tax => CalculateTax().ToString("C");
 		public string Total
 		{
 			get
 			{
-				//replace with calculation
-				return "0.00";
+				decimal totalPrice = CalculateSubTotal() + CalculateTax();
+				return totalPrice.ToString( "C" );
 			}
 		}
 
 
-		public SalesViewModel( IProductEndpoint productEndpoint )
+		public SalesViewModel( IProductEndpoint productEndpoint, IConfigHelper configHelper )
 		{
 			_productEndpoint = productEndpoint;
+			_configHelper = configHelper;
 			Products = new BindingList<ProductModel>();
 			Cart = new BindingList<CartItemModel>();
 			_itemQuantity = 0;
@@ -147,6 +126,8 @@ namespace RRMDesktopWPF.ViewModels
 
 			ItemQuantity = 1;
 			NotifyOfPropertyChange( () => Subtotal );
+			NotifyOfPropertyChange( () => Tax);
+			NotifyOfPropertyChange( () => Total );
 			NotifyOfPropertyChange( () => Cart );
 		}
 
@@ -164,6 +145,8 @@ namespace RRMDesktopWPF.ViewModels
 		public void RemoveFromCart()
 		{
 			NotifyOfPropertyChange( () => Subtotal );
+			NotifyOfPropertyChange( () => Tax );
+			NotifyOfPropertyChange( () => Total );
 
 		}
 
@@ -180,6 +163,31 @@ namespace RRMDesktopWPF.ViewModels
 		public void Checkout()
 		{
 
+		}
+
+		private decimal CalculateSubTotal()
+		{
+			decimal subTotal = 0;
+
+			foreach ( CartItemModel item in Cart )
+			{
+				subTotal += item.Product.RetailPrice * item.QuantityInCart;
+			}
+
+			return subTotal;
+		}
+
+		private decimal CalculateTax()
+		{
+			decimal subTotal = 0;
+			decimal taxRate = _configHelper.GetTaxRate()/100;
+
+			foreach ( CartItemModel item in Cart )
+			{
+				subTotal += item.Product.RetailPrice * item.QuantityInCart * taxRate;
+			}
+
+			return subTotal;
 		}
 	}
 }
