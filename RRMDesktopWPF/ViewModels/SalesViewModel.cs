@@ -28,7 +28,7 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		private int _itemQuantity = 0;
+		private int _itemQuantity;
 		public int ItemQuantity
 		{
 			get => _itemQuantity;
@@ -83,7 +83,7 @@ namespace RRMDesktopWPF.ViewModels
 			_configHelper = configHelper;
 			Products = new BindingList<ProductModel>();
 			Cart = new BindingList<CartItemModel>();
-			_itemQuantity = 0;
+			_itemQuantity = 1;
 		}
 
 		protected override async void OnViewLoaded( object view )
@@ -178,7 +178,7 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 		private decimal CalculateTax()
-		{
+			{
 			decimal taxAmount = 0;
 			decimal taxRate = _configHelper.GetTaxRate() / 100;
 
