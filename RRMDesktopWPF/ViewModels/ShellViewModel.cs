@@ -9,9 +9,9 @@ namespace RRMDesktopWPF.ViewModels
 {
 	public class ShellViewModel : Conductor<object>, IHandle<LoginEvent>
 	{
-		private IEventAggregator _event;
-		private SalesViewModel _salesViewModel;
-		private SimpleContainer _simpleContainer;
+		private readonly IEventAggregator _event;
+		private readonly SalesViewModel _salesViewModel;
+		private readonly SimpleContainer _simpleContainer;
 
 		public ShellViewModel( SalesViewModel salesViewModel , IEventAggregator eventAggregator , SimpleContainer simpleContainer )
 		{
@@ -23,6 +23,6 @@ namespace RRMDesktopWPF.ViewModels
 			ActivateItemAsync( _simpleContainer.GetInstance<LoginViewModel>() );
 		}
 
-		public Task HandleAsync( LoginEvent message , CancellationToken cancellationToken ) => ActivateItemAsync( _salesViewModel );
+		public Task HandleAsync( LoginEvent message , CancellationToken cancellationToken ) => ActivateItemAsync( _salesViewModel, cancellationToken );
 	}
 }

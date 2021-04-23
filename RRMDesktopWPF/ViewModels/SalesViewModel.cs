@@ -22,6 +22,7 @@ namespace RRMDesktopWPF.ViewModels
 			}
 		}
 
+
 		private int _itemQuantity;
 		public int ItemQuantity
 		{
@@ -33,8 +34,8 @@ namespace RRMDesktopWPF.ViewModels
 			}
 		}
 
-		private BindingList<string> _cart;
 
+		private BindingList<string> _cart;
 		public BindingList<string> Cart
 		{
 			get { return _cart; }
@@ -44,6 +45,19 @@ namespace RRMDesktopWPF.ViewModels
 				NotifyOfPropertyChange( () => Cart );
 			}
 		}
+
+
+		private ProductModel _selectedProduct;
+		public ProductModel SelectedProduct
+		{
+			get => _selectedProduct;
+			set 
+			{
+				_selectedProduct = value;
+				NotifyOfPropertyChange( () => SelectedProduct );
+			}
+		}
+
 
 		public string Subtotal
 		{
@@ -71,13 +85,16 @@ namespace RRMDesktopWPF.ViewModels
 				return "0.00";
 			}
 		}
-		private IProductEndpoint _productEndpoint;
+
+		private readonly IProductEndpoint _productEndpoint;
+
 
 		public SalesViewModel( IProductEndpoint productEndpoint )
 		{
 			_productEndpoint = productEndpoint;
 
 		}
+
 
 		protected override async void OnViewLoaded( object view )
 		{

@@ -10,19 +10,23 @@ namespace RRMDesktopWPF.Library.Api
 {
     public class ApiHelper : IApiHelper
     {
-        private HttpClient _apiClient { get; set; }
-        private ILoggedInUserModel _loggedInUserModel { get; set; }
+        private ILoggedInUserModel LoggedInUserModel { get; set; }
+
+
+        private HttpClient _apiClient;
+        public HttpClient ApiClient
+        {
+            get => _apiClient;
+        }
+
 
         public ApiHelper(ILoggedInUserModel loggedInUserModel)
         {
             InitializeHttpClient();
-            _loggedInUserModel = loggedInUserModel;
+            LoggedInUserModel = loggedInUserModel;
         }
 
-        public HttpClient ApiClient
-		{
-            get => _apiClient;
-		}
+
 
         private void InitializeHttpClient()
         {
@@ -69,12 +73,12 @@ namespace RRMDesktopWPF.Library.Api
                 if (response.IsSuccessStatusCode)
                 {
                     LoggedInUserModel result = await response.Content.ReadAsAsync<LoggedInUserModel>();
-                    _loggedInUserModel.Id = result.Id;
-                    _loggedInUserModel.CreatedTime = result.CreatedTime;
-                    _loggedInUserModel.EmailAddress = result.EmailAddress;
-                    _loggedInUserModel.FirstName = result.FirstName;
-                    _loggedInUserModel.LastName = result.LastName;
-                    _loggedInUserModel.AccessToken = token;
+                    LoggedInUserModel.Id = result.Id;
+                    LoggedInUserModel.CreatedTime = result.CreatedTime;
+                    LoggedInUserModel.EmailAddress = result.EmailAddress;
+                    LoggedInUserModel.FirstName = result.FirstName;
+                    LoggedInUserModel.LastName = result.LastName;
+                    LoggedInUserModel.AccessToken = token;
                 }
                 else
                 {

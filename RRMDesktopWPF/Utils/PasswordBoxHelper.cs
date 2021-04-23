@@ -30,7 +30,9 @@ namespace RRMDesktopWPF.Utils
 			private static void SetBoundPassword( DependencyObject d , string value )
 			{
 				if ( string.Equals( value , GetBoundPassword( d ) ) )
+				{
 					return; // and this is how we prevent infinite recursion
+				}
 
 				d.SetValue( BoundPasswordProperty , value );
 			}
@@ -39,10 +41,10 @@ namespace RRMDesktopWPF.Utils
 				DependencyObject d ,
 				DependencyPropertyChangedEventArgs e )
 			{
-				var box = d as PasswordBox;
-
-				if ( box == null )
+				if ( !( d is PasswordBox box ) )
+				{
 					return;
+				}
 
 				box.Password = GetBoundPassword( d );
 			}

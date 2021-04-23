@@ -15,7 +15,7 @@ namespace RRMDesktopWPF.ViewModels
         private string _password;
         private readonly IApiHelper _apiHelper;
         private string _errorMessage;
-        private IEventAggregator _event;
+        private readonly IEventAggregator _event;
 
         public LoginViewModel(IApiHelper apiHelper, IEventAggregator eventAggregator)
         {

@@ -9,7 +9,7 @@ namespace RRMDesktopWPF.Library.Api
 {
 	public class ProductEndpoint : IProductEndpoint
 	{
-		private IApiHelper _apiHelper;
+		private readonly IApiHelper _apiHelper;
 
 		public ProductEndpoint( IApiHelper apiHelper )
 		{
