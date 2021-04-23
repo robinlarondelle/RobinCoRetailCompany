@@ -11,16 +11,14 @@ namespace RRMDesktopWPF.ViewModels
 	{
 		private IEventAggregator _event;
 		private SalesViewModel _salesViewModel;
-		private SimpleContainer _simpleContainer;
 
-		public ShellViewModel( SalesViewModel salesViewModel , IEventAggregator eventAggregator , SimpleContainer simpleContainer )
+		public ShellViewModel( SalesViewModel salesViewModel , IEventAggregator eventAggregator )
 		{
 			_event = eventAggregator;
 			_salesViewModel = salesViewModel;
-			_simpleContainer = simpleContainer;
 
 			_event.SubscribeOnUIThread( this );
-			ActivateItemAsync( _simpleContainer.GetInstance<LoginViewModel>() );
+			ActivateItemAsync( IoC.Get<LoginViewModel>() );
 		}
 
 		public Task HandleAsync( LoginEvent message , CancellationToken cancellationToken ) => ActivateItemAsync( _salesViewModel );
