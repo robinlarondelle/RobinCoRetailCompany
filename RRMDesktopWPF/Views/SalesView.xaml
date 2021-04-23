@@ -47,7 +47,8 @@
 			Grid.RowSpan="2"
 			Grid.Column="1"
 			MinWidth="150"
-			Margin="10,0">
+			Margin="10,0"
+			SelectedItem="{Binding SelectedProduct}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<TextBlock Text="{Binding ProductName}" />
@@ -97,17 +98,23 @@
 			Grid.Column="3"
 			MinWidth="150"
 			MinHeight="200"
-			Margin="10,0" />
+			Margin="10,0">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding DisplayText}" />
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 		<StackPanel
 			Grid.Row="4"
 			Grid.Column="3"
 			Margin="10,10,10,0">
 			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-				<TextBlock Text="Subtotal:&#160;&#160;&#160;$" />
+				<TextBlock Text="Subtotal:&#160;&#160;&#160;" />
 				<TextBlock x:Name="Subtotal" Text="0.00" />
 			</StackPanel>
 			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-				<TextBlock Text="Tax:&#160;&#160;&#160;$" />
+				<TextBlock Text="Tax:&#160;&#160;&#160;" />
 				<TextBlock x:Name="Tax" Text="0.00" />
 			</StackPanel>
 			<Canvas
@@ -121,7 +128,7 @@
 					X2="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=StackPanel}}" />
 			</Canvas>
 			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-				<TextBlock Text="Total:&#160;&#160;&#160;$" />
+				<TextBlock Text="Total:&#160;&#160;&#160;" />
 				<TextBlock x:Name="Total" Text="0.00" />
 			</StackPanel>
 		</StackPanel>

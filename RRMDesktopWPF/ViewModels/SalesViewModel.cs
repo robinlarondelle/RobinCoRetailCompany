@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Caliburn.Micro;
@@ -11,10 +12,13 @@ namespace RRMDesktopWPF.ViewModels
 {
 	public class SalesViewModel : Screen
 	{
+		private readonly IProductEndpoint _productEndpoint;
+
+
 		private BindingList<ProductModel> _products;
 		public BindingList<ProductModel> Products
 		{
-			get { return _products; }
+			get => _products;
 			set
 			{
 				_products = value;
@@ -22,22 +26,24 @@ namespace RRMDesktopWPF.ViewModels
 			}
 		}
 
-		private int _itemQuantity;
+
+		private int _itemQuantity = 0;
 		public int ItemQuantity
 		{
-			get { return _itemQuantity; }
+			get => _itemQuantity;
 			set
 			{
 				_itemQuantity = value;
 				NotifyOfPropertyChange( () => ItemQuantity );
+				NotifyOfPropertyChange( () => CanAddToCart );
 			}
 		}
 
-		private BindingList<string> _cart;
 
-		public BindingList<string> Cart
+		private BindingList<CartItemModel> _cart;
+		public BindingList<CartItemModel> Cart
 		{
-			get { return _cart; }
+			get => _cart;
 			set
 			{
 				_cart = value;
@@ -45,12 +51,32 @@ namespace RRMDesktopWPF.ViewModels
 			}
 		}
 
+		private ProductModel _selectedProduct;
+		public ProductModel SelectedProduct
+		{
+			get => _selectedProduct;
+			set
+			{
+				_selectedProduct = value;
+				NotifyOfPropertyChange( () => SelectedProduct );
+				NotifyOfPropertyChange( () => CanAddToCart );
+			}
+		}
+
+
+
 		public string Subtotal
 		{
 			get
 			{
-				//replace with calculation
-				return "0.00";
+				decimal subTotal = 0;
+
+				foreach ( CartItemModel item in Cart )
+				{
+					subTotal += item.Product.RetailPrice * item.QuantityInCart;
+				}
+
+				return subTotal.ToString( "C" );
 			}
 		}
 
@@ -71,12 +97,14 @@ namespace RRMDesktopWPF.ViewModels
 				return "0.00";
 			}
 		}
-		private IProductEndpoint _productEndpoint;
+
 
 		public SalesViewModel( IProductEndpoint productEndpoint )
 		{
 			_productEndpoint = productEndpoint;
-
+			Products = new BindingList<ProductModel>();
+			Cart = new BindingList<CartItemModel>();
+			_itemQuantity = 0;
 		}
 
 		protected override async void OnViewLoaded( object view )
@@ -91,20 +119,35 @@ namespace RRMDesktopWPF.ViewModels
 			Products = new BindingList<ProductModel>( productsList );
 		}
 
-		public bool CanAddToCart
-		{
-			get
-			{
-				// Make sure a product is selected
-				// Make sure a quantity is given
-				return true;
-			}
 
-		}
+		/// <summary>
+		/// You can only add something to the cart if the amount the customer wants is less than the amount in stock 
+		/// </summary>
+		public bool CanAddToCart => ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity;
+
 
 		public void AddToCart()
 		{
+			CartItemModel existingModel = Cart.FirstOrDefault( c => c.Product == SelectedProduct );
 
+			if ( existingModel != null )
+			{
+				existingModel.QuantityInCart += ItemQuantity;
+				Cart.Remove( existingModel );
+				Cart.Add( existingModel );
+			}
+			else
+			{
+				Cart.Add( new CartItemModel
+				{
+					Product = SelectedProduct ,
+					QuantityInCart = ItemQuantity
+				} );
+			}
+
+			ItemQuantity = 1;
+			NotifyOfPropertyChange( () => Subtotal );
+			NotifyOfPropertyChange( () => Cart );
 		}
 
 		public bool CanRemoveFromCart
@@ -120,6 +163,7 @@ namespace RRMDesktopWPF.ViewModels
 
 		public void RemoveFromCart()
 		{
+			NotifyOfPropertyChange( () => Subtotal );
 
 		}
 
