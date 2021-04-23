@@ -65,8 +65,8 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		public string Subtotal => CalculateSubTotal().ToString("C");
-		public string Tax => CalculateTax().ToString("C");
+		public string Subtotal => CalculateSubTotal().ToString( "C" );
+		public string Tax => CalculateTax().ToString( "C" );
 		public string Total
 		{
 			get
@@ -77,7 +77,7 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		public SalesViewModel( IProductEndpoint productEndpoint, IConfigHelper configHelper )
+		public SalesViewModel( IProductEndpoint productEndpoint , IConfigHelper configHelper )
 		{
 			_productEndpoint = productEndpoint;
 			_configHelper = configHelper;
@@ -126,7 +126,7 @@ namespace RRMDesktopWPF.ViewModels
 
 			ItemQuantity = 1;
 			NotifyOfPropertyChange( () => Subtotal );
-			NotifyOfPropertyChange( () => Tax);
+			NotifyOfPropertyChange( () => Tax );
 			NotifyOfPropertyChange( () => Total );
 			NotifyOfPropertyChange( () => Cart );
 		}
@@ -179,15 +179,14 @@ namespace RRMDesktopWPF.ViewModels
 
 		private decimal CalculateTax()
 		{
-			decimal subTotal = 0;
-			decimal taxRate = _configHelper.GetTaxRate()/100;
+			decimal taxAmount = 0;
+			decimal taxRate = _configHelper.GetTaxRate() / 100;
 
-			foreach ( CartItemModel item in Cart )
-			{
-				subTotal += item.Product.RetailPrice * item.QuantityInCart * taxRate;
-			}
+			taxAmount = Cart
+						.Where( c => c.Product.IsTaxable )
+						.Sum( c => c.Product.RetailPrice * c.QuantityInCart * taxRate );
 
-			return subTotal;
+			return taxAmount;
 		}
 	}
 }
