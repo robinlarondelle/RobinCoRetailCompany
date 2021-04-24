@@ -9,8 +9,8 @@ namespace RRMDesktopWPF.ViewModels
 {
 	public class ShellViewModel : Conductor<object>, IHandle<LoginEvent>
 	{
-		private IEventAggregator _event;
-		private SalesViewModel _salesViewModel;
+		private readonly IEventAggregator _event;
+		private readonly SalesViewModel _salesViewModel;
 
 		public ShellViewModel( SalesViewModel salesViewModel , IEventAggregator eventAggregator )
 		{

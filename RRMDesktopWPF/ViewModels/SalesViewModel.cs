@@ -14,6 +14,7 @@ namespace RRMDesktopWPF.ViewModels
 	public class SalesViewModel : Screen
 	{
 		private readonly IProductEndpoint _productEndpoint;
+		private readonly ISaleEndpoint _saleEndpoint;
 		private readonly IConfigHelper _configHelper;
 
 		private BindingList<ProductModel> _products;
@@ -77,10 +78,12 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		public SalesViewModel( IProductEndpoint productEndpoint , IConfigHelper configHelper )
+		public SalesViewModel( IProductEndpoint productEndpoint , ISaleEndpoint saleEndpoint, IConfigHelper configHelper )
 		{
 			_productEndpoint = productEndpoint;
+			_saleEndpoint = saleEndpoint;
 			_configHelper = configHelper;
+
 			Products = new BindingList<ProductModel>();
 			Cart = new BindingList<CartItemModel>();
 			_itemQuantity = 1;
@@ -129,6 +132,7 @@ namespace RRMDesktopWPF.ViewModels
 			NotifyOfPropertyChange( () => Tax );
 			NotifyOfPropertyChange( () => Total );
 			NotifyOfPropertyChange( () => Cart );
+			NotifyOfPropertyChange( () => CanCheckout );
 		}
 
 		public bool CanRemoveFromCart
@@ -137,7 +141,7 @@ namespace RRMDesktopWPF.ViewModels
 			{
 				// Make sure a product is selected
 				// Make sure a quantity is given
-				return true;
+				return false;
 			}
 
 		}
@@ -147,22 +151,25 @@ namespace RRMDesktopWPF.ViewModels
 			NotifyOfPropertyChange( () => Subtotal );
 			NotifyOfPropertyChange( () => Tax );
 			NotifyOfPropertyChange( () => Total );
+			NotifyOfPropertyChange( () => CanCheckout );
 
 		}
 
-		public bool CanCheckout
+		public bool CanCheckout => Cart.Count > 0;
+		public async Task Checkout()
 		{
-			get
+			SaleModel saleModel = new SaleModel();
+
+			foreach( CartItemModel item in Cart)
 			{
-				// Make sure something is in the cart
-				return true;
+				saleModel.SaleDetails.Add( new SaleDetailModel
+				{
+					ProductId = item.Product.Id ,
+					Quantity = item.QuantityInCart
+				} );
 			}
 
-		}
-
-		public void Checkout()
-		{
-
+			await _saleEndpoint.PostSaleAsync(saleModel);
 		}
 
 		private decimal CalculateSubTotal()
@@ -178,9 +185,9 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 		private decimal CalculateTax()
-			{
+		{
 			decimal taxAmount = 0;
-			decimal taxRate = _configHelper.GetTaxRate() / 100;
+			decimal taxRate = _configHelper.GetTaxRate();
 
 			taxAmount = Cart
 						.Where( c => c.Product.IsTaxable )

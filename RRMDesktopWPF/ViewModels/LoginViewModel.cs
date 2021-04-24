@@ -11,8 +11,8 @@ namespace RRMDesktopWPF.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private string _username;
-        private string _password;
+        private string _username = "test@test.nl";
+        private string _password = "Wachtwoord123!";
         private readonly IApiHelper _apiHelper;
         private string _errorMessage;
         private readonly IEventAggregator _event;

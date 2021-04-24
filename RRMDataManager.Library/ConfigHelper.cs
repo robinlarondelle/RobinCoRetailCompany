@@ -1,10 +1,15 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RRMDesktopWPF.Library.Helpers
+namespace RRMDataManager.Library
 {
-	public class ConfigHelper : IConfigHelper
+	public class ConfigHelper
 	{
-		public decimal GetTaxRate()
+		public static decimal GetTaxRate()
 		{
 			string rateText = ConfigurationManager.AppSettings[ "taxrate" ];
 			bool IsValidTaxRate = decimal.TryParse( rateText , out decimal output );
@@ -16,6 +21,5 @@ namespace RRMDesktopWPF.Library.Helpers
 
 			return output;
 		}
-
 	}
 }

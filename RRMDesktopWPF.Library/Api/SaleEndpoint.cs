@@ -1,29 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 using RRMDesktopWPF.Library.Models;
 
 namespace RRMDesktopWPF.Library.Api
 {
-	public class ProductEndpoint : IProductEndpoint
+	public class SaleEndpoint : ISaleEndpoint
 	{
 		private readonly IApiHelper _apiHelper;
 
-		public ProductEndpoint( IApiHelper apiHelper )
+		public SaleEndpoint( IApiHelper apiHelper )
 		{
 			_apiHelper = apiHelper;
 		}
 
-		public async Task<List<ProductModel>> GetAllProductsAsync()
+		public async Task PostSaleAsync( SaleModel sale )
 		{
-			using ( HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync( "/api/Product" ) )
+			using ( HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync( "/api/Sale" , sale ) )
 			{
 				if ( response.IsSuccessStatusCode )
 				{
-					List<ProductModel> result = await response.Content.ReadAsAsync<List<ProductModel>>();
-					return result;
+
 				}
 				else
 				{
