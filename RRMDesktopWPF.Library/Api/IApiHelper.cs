@@ -9,6 +9,6 @@ namespace RRMDesktopWPF.Library.Api
 	{
 		HttpClient ApiClient { get; }
 		Task<AuthenticatedUser> Authenticate( string username , string password );
-		Task GetLoggedInUserInformation(string token);
+		Task GetLoggedInUserInformation( string token );
 	}
 }

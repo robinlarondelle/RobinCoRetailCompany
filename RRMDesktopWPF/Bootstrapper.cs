@@ -4,11 +4,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+using AutoMapper;
+
 using Caliburn.Micro;
 
 using RRMDesktopWPF.Library.Api;
 using RRMDesktopWPF.Library.Helpers;
 using RRMDesktopWPF.Library.Models;
+using RRMDesktopWPF.Models;
 using RRMDesktopWPF.Utils;
 using RRMDesktopWPF.ViewModels;
 
@@ -30,8 +33,21 @@ namespace RRMDesktopWPF
  				"PasswordChanged" );
 		}
 
+		private IMapper ConfigureAutoMapper()
+		{
+			MapperConfiguration config = new MapperConfiguration( cfg =>
+			{
+				cfg.CreateMap<ProductModel , ProductDisplayModel>();
+				cfg.CreateMap<CartItemModel , CartItemDisplayModel>();
+			} );
+
+			return config.CreateMapper();
+		}
+
 		protected override void Configure()
 		{
+			_container.Instance( ConfigureAutoMapper() );
+
 			_container
 				.Instance( _container )
 				.PerRequest<IProductEndpoint , ProductEndpoint>()
@@ -51,9 +67,9 @@ namespace RRMDesktopWPF
 				.ToList() //create a list with all the ViewModels to use ForEach
 				.ForEach( viewModelType =>
 				 {
-					//Register each ViewModel in the Dependency Injection Container
-					//This will provide a new instance everytime a ViewModel is requested
-					_container.RegisterPerRequest( viewModelType , viewModelType.ToString() , viewModelType );
+					 //Register each ViewModel in the Dependency Injection Container
+					 //This will provide a new instance everytime a ViewModel is requested
+					 _container.RegisterPerRequest( viewModelType , viewModelType.ToString() , viewModelType );
 				 } );
 		}
 

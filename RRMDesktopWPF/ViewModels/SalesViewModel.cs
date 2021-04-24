@@ -3,11 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper;
+
 using Caliburn.Micro;
 
 using RRMDesktopWPF.Library.Api;
 using RRMDesktopWPF.Library.Helpers;
 using RRMDesktopWPF.Library.Models;
+using RRMDesktopWPF.Models;
 
 namespace RRMDesktopWPF.ViewModels
 {
@@ -16,9 +19,9 @@ namespace RRMDesktopWPF.ViewModels
 		private readonly IProductEndpoint _productEndpoint;
 		private readonly ISaleEndpoint _saleEndpoint;
 		private readonly IConfigHelper _configHelper;
-
-		private BindingList<ProductModel> _products;
-		public BindingList<ProductModel> Products
+		private readonly IMapper _mapper;
+		private BindingList<ProductDisplayModel> _products;
+		public BindingList<ProductDisplayModel> Products
 		{
 			get => _products;
 			set
@@ -42,8 +45,8 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		private BindingList<CartItemModel> _cart;
-		public BindingList<CartItemModel> Cart
+		private BindingList<CartItemDisplayModel> _cart;
+		public BindingList<CartItemDisplayModel> Cart
 		{
 			get => _cart;
 			set
@@ -53,8 +56,8 @@ namespace RRMDesktopWPF.ViewModels
 			}
 		}
 
-		private ProductModel _selectedProduct;
-		public ProductModel SelectedProduct
+		private ProductDisplayModel _selectedProduct;
+		public ProductDisplayModel SelectedProduct
 		{
 			get => _selectedProduct;
 			set
@@ -78,14 +81,20 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		public SalesViewModel( IProductEndpoint productEndpoint , ISaleEndpoint saleEndpoint, IConfigHelper configHelper )
+		//Constructor
+		public SalesViewModel(
+			IProductEndpoint productEndpoint ,
+			ISaleEndpoint saleEndpoint ,
+			IConfigHelper configHelper ,
+			IMapper mapper )
 		{
 			_productEndpoint = productEndpoint;
 			_saleEndpoint = saleEndpoint;
 			_configHelper = configHelper;
+			_mapper = mapper;
 
-			Products = new BindingList<ProductModel>();
-			Cart = new BindingList<CartItemModel>();
+			Products = new BindingList<ProductDisplayModel>();
+			Cart = new BindingList<CartItemDisplayModel>();
 			_itemQuantity = 1;
 		}
 
@@ -98,35 +107,31 @@ namespace RRMDesktopWPF.ViewModels
 		private async Task InitializeProducts()
 		{
 			List<ProductModel> productsList = await _productEndpoint.GetAllProductsAsync();
-			Products = new BindingList<ProductModel>( productsList );
+			List<ProductDisplayModel> productDisplayModelList = _mapper.Map<List<ProductDisplayModel>>( productsList );
+			Products = new BindingList<ProductDisplayModel>( productDisplayModelList );
 		}
 
 
-		/// <summary>
-		/// You can only add something to the cart if the amount the customer wants is less than the amount in stock 
-		/// </summary>
+		// You can only add something to the cart if the amount the customer wants is less than the amount in stock 
 		public bool CanAddToCart => ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity;
-
-
 		public void AddToCart()
 		{
-			CartItemModel existingModel = Cart.FirstOrDefault( c => c.Product == SelectedProduct );
+			CartItemDisplayModel existingModel = Cart.FirstOrDefault( c => c.Product == SelectedProduct );
 
 			if ( existingModel != null )
 			{
 				existingModel.QuantityInCart += ItemQuantity;
-				Cart.Remove( existingModel );
-				Cart.Add( existingModel );
 			}
 			else
 			{
-				Cart.Add( new CartItemModel
+				Cart.Add( new CartItemDisplayModel
 				{
 					Product = SelectedProduct ,
 					QuantityInCart = ItemQuantity
 				} );
 			}
 
+			SelectedProduct.QuantityInStock -= ItemQuantity;
 			ItemQuantity = 1;
 			NotifyOfPropertyChange( () => Subtotal );
 			NotifyOfPropertyChange( () => Tax );
@@ -135,17 +140,8 @@ namespace RRMDesktopWPF.ViewModels
 			NotifyOfPropertyChange( () => CanCheckout );
 		}
 
-		public bool CanRemoveFromCart
-		{
-			get
-			{
-				// Make sure a product is selected
-				// Make sure a quantity is given
-				return false;
-			}
 
-		}
-
+		public bool CanRemoveFromCart => false;
 		public void RemoveFromCart()
 		{
 			NotifyOfPropertyChange( () => Subtotal );
@@ -155,12 +151,13 @@ namespace RRMDesktopWPF.ViewModels
 
 		}
 
+
 		public bool CanCheckout => Cart.Count > 0;
 		public async Task Checkout()
 		{
 			SaleModel saleModel = new SaleModel();
 
-			foreach( CartItemModel item in Cart)
+			foreach ( CartItemDisplayModel item in Cart )
 			{
 				saleModel.SaleDetails.Add( new SaleDetailModel
 				{
@@ -169,14 +166,15 @@ namespace RRMDesktopWPF.ViewModels
 				} );
 			}
 
-			await _saleEndpoint.PostSaleAsync(saleModel);
+			await _saleEndpoint.PostSaleAsync( saleModel );
 		}
+
 
 		private decimal CalculateSubTotal()
 		{
 			decimal subTotal = 0;
 
-			foreach ( CartItemModel item in Cart )
+			foreach ( CartItemDisplayModel item in Cart )
 			{
 				subTotal += item.Product.RetailPrice * item.QuantityInCart;
 			}

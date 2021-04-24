@@ -16,6 +16,5 @@ namespace RRMDesktopWPF.Library.Helpers
 
 			return output;
 		}
-
 	}
 }
