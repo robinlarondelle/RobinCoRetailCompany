@@ -110,6 +110,7 @@
 			Grid.Column="3"
 			MinWidth="150"
 			MinHeight="200"
+			SelectedItem="{Binding SelectedCartItem}"
 			Margin="10,0">
 			<ListBox.ItemTemplate>
 				<DataTemplate>

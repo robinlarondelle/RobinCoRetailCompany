@@ -69,6 +69,19 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
+		private CartItemDisplayModel _selectedCartItem;
+		public CartItemDisplayModel SelectedCartItem
+		{
+			get { return _selectedCartItem; }
+			set 
+			{ 
+				_selectedCartItem = value;
+				NotifyOfPropertyChange( () => SelectedCartItem );
+				NotifyOfPropertyChange( () => CanRemoveFromCart );
+			}
+		}
+
+
 		public string Subtotal => CalculateSubTotal().ToString( "C" );
 		public string Tax => CalculateTax().ToString( "C" );
 		public string Total
@@ -141,9 +154,22 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		public bool CanRemoveFromCart => false;
+		public bool CanRemoveFromCart => SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock > 0;
 		public void RemoveFromCart()
 		{
+			//remove the cart item from the cart
+			//increment the Quantity In Stock of the removed product
+			SelectedCartItem.Product.QuantityInStock += 1;
+
+			if (SelectedCartItem.QuantityInCart > 1)
+			{
+				SelectedCartItem.QuantityInCart -= 1;
+			}
+			else
+			{
+				Cart.Remove( SelectedCartItem );
+			}
+
 			NotifyOfPropertyChange( () => Subtotal );
 			NotifyOfPropertyChange( () => Tax );
 			NotifyOfPropertyChange( () => Total );
