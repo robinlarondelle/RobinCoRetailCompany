@@ -154,7 +154,7 @@ namespace RRMDesktopWPF.ViewModels
 		}
 
 
-		public bool CanRemoveFromCart => SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock > 0;
+		public bool CanRemoveFromCart => SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0;
 		public void RemoveFromCart()
 		{
 			//remove the cart item from the cart
@@ -174,6 +174,7 @@ namespace RRMDesktopWPF.ViewModels
 			NotifyOfPropertyChange( () => Tax );
 			NotifyOfPropertyChange( () => Total );
 			NotifyOfPropertyChange( () => CanCheckout );
+			NotifyOfPropertyChange( () => CanAddToCart );
 
 		}
 
@@ -193,6 +194,18 @@ namespace RRMDesktopWPF.ViewModels
 			}
 
 			await _saleEndpoint.PostSaleAsync( saleModel );
+			await ResetSalesViewModel();
+		}
+
+		private async Task ResetSalesViewModel()
+		{
+			Cart = new BindingList<CartItemDisplayModel>();
+			await InitializeProducts();
+
+			NotifyOfPropertyChange( () => Subtotal );
+			NotifyOfPropertyChange( () => Tax );
+			NotifyOfPropertyChange( () => Total );
+			NotifyOfPropertyChange( () => CanCheckout );
 		}
 
 

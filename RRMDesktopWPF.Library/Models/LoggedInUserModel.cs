@@ -10,5 +10,15 @@ namespace RRMDesktopWPF.Library.Models
 		public string LastName { get; set; }
 		public string EmailAddress { get; set; }
 		public DateTime CreatedTime { get; set; }
+
+		public void Clear()
+		{
+			AccessToken = "";
+			Id = "";
+			FirstName = "";
+			LastName = "";
+			EmailAddress = "";
+			CreatedTime = DateTime.MinValue;
+		}
 	}
 }
