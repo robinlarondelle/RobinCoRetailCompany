@@ -12,7 +12,6 @@ namespace RRMDataManager.Library.DataAccess
 		{
 			List<DbSaleDetailModel> saleDetailsList = new List<DbSaleDetailModel>();
 			ProductData productData = new ProductData();
-			SqlDataAccess sql = new SqlDataAccess();
 
 			decimal taxRate = ConfigHelper.GetTaxRate();
 
@@ -52,20 +51,30 @@ namespace RRMDataManager.Library.DataAccess
 
 			saleToSave.Total = saleToSave.SubTotal + saleToSave.Tax;
 
-			//Save the sale to the database
-			//First save the parent Sale Model
-			sql.SaveData( "dbo.SPSale_Insert" , saleToSave , "RRMData" );
+			using ( SqlDataAccess sql  = new SqlDataAccess())
+			{
+				try
+				{
+					sql.StartTransaction( "RRMData" );
+					sql.SaveDataInTransaction( "dbo.SPSale_Insert" , saleToSave );
+					
+					saleToSave.Id = sql.LoadData<int , dynamic>( "SPSale_LookupID" , new { saleToSave.CashierId , saleToSave.SaleDate } , "RRMData" ).FirstOrDefault();
 
-			//Next:
-			//	- set the SaleID of each SaleDetails to the saved Sale
-			//	- save the SaleDetail
-			saleToSave.Id =  sql.LoadData<int, dynamic>( "SPSale_LookupID" , new { saleToSave.CashierId , saleToSave.SaleDate } , "RRMData" ).FirstOrDefault();
+					saleDetailsList.ForEach( saleDetail =>
+					{
+						saleDetail.SaleId = saleToSave.Id;
+						sql.SaveDataInTransaction( "dbo.SPSaleDetail_Inset" , saleDetail );
+					} );
 
-			saleDetailsList.ForEach( saleDetail =>
-			 {
-				 saleDetail.SaleId = saleToSave.Id;
-				 sql.SaveData( "dbo.SPSaleDetail_Inset" , saleDetail , "RRMData" );
-			 } );
+					sql.CommitTransaction();
+				}
+				catch
+				{
+					sql.RollbackTransaction();
+					throw;
+				}
+			}
+
 		}
 	}
 }

@@ -58,6 +58,8 @@ namespace RRMDesktopWPF.Library.Api
 
 		}
 
+		public void LogOffUser() => _apiClient.DefaultRequestHeaders.Clear();
+
 		public async Task GetLoggedInUserInformation( string token )
 		{
 			_apiClient.DefaultRequestHeaders.Clear();
