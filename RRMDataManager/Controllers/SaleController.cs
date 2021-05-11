@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Web.Http;
 
 using Microsoft.AspNet.Identity;
 
@@ -17,6 +18,13 @@ namespace RRMDataManager.Controllers
 			string userId = RequestContext.Principal.Identity.GetUserId();
 
 			data.SaveSale( sale , userId );
+		}
+
+		[Route("GetSaleReport")]
+		public List<SaleReportModel> GetSaleReport()
+		{
+			SaleData data = new SaleData();
+			return data.GetSaleReport();
 		}
 	}
 }
