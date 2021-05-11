@@ -12,6 +12,7 @@ namespace RRMDataManager.Controllers
 	public class SaleController : ApiController
 	{
 		//POST /api/Sale
+		[Authorize( Roles = "Cashier" )]
 		public void Post( SaleModel sale )
 		{
 			SaleData data = new SaleData();
@@ -21,6 +22,7 @@ namespace RRMDataManager.Controllers
 		}
 
 		[Route("GetSaleReport")]
+		[Authorize( Roles = "Admin, Manager" )]
 		public List<SaleReportModel> GetSaleReport()
 		{
 			SaleData data = new SaleData();

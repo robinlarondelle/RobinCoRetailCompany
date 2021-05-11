@@ -6,7 +6,7 @@ using RRMDataManager.Library.Models;
 
 namespace RRMDataManager.Controllers
 {
-	[Authorize]
+	[Authorize (Roles = "Cashier")]
 	public class ProductController : ApiController
 	{
 		// GET: api/Product

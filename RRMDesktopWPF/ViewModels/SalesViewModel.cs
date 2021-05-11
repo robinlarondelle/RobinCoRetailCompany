@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 using AutoMapper;
 
@@ -20,6 +23,8 @@ namespace RRMDesktopWPF.ViewModels
 		private readonly ISaleEndpoint _saleEndpoint;
 		private readonly IConfigHelper _configHelper;
 		private readonly IMapper _mapper;
+		private readonly StatusInfoViewModel _status;
+		private readonly IWindowManager _window;
 		private BindingList<ProductDisplayModel> _products;
 		public BindingList<ProductDisplayModel> Products
 		{
@@ -99,12 +104,16 @@ namespace RRMDesktopWPF.ViewModels
 			IProductEndpoint productEndpoint ,
 			ISaleEndpoint saleEndpoint ,
 			IConfigHelper configHelper ,
-			IMapper mapper )
+			IMapper mapper,
+			StatusInfoViewModel statusInfoViewModel,
+			IWindowManager window)
 		{
 			_productEndpoint = productEndpoint;
 			_saleEndpoint = saleEndpoint;
 			_configHelper = configHelper;
 			_mapper = mapper;
+			_status = statusInfoViewModel;
+			_window = window;
 
 			Products = new BindingList<ProductDisplayModel>();
 			Cart = new BindingList<CartItemDisplayModel>();
@@ -114,7 +123,30 @@ namespace RRMDesktopWPF.ViewModels
 		protected override async void OnViewLoaded( object view )
 		{
 			base.OnViewLoaded( view );
-			await InitializeProducts();
+
+			try
+			{
+				await InitializeProducts();
+			}
+			catch ( Exception ex )
+			{
+				dynamic settings = new ExpandoObject();
+				settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+				settings.ResizeMode = ResizeMode.NoResize;
+				settings.Title = "System Error";
+
+				if ( ex.Message == "Unauthorized" )
+				{
+					_status.UpdateMessage( "Unauthorized Access" , "You do not have permission to interact with the Sales form" );
+					await _window.ShowDialogAsync( _status , null , settings );
+					await TryCloseAsync();
+				} else
+				{
+					_status.UpdateMessage( "Exception" , ex.Message );
+					await _window.ShowDialogAsync( _status , null , settings );
+					await TryCloseAsync();
+				}
+			}
 		}
 
 		private async Task InitializeProducts()
