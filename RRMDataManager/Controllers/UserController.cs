@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -16,7 +17,7 @@ namespace RRMDataManager.Controllers
 
 		// GET: User/Details/5
 		[HttpGet]
-		public UserModel GetById() 
+		public UserModel GetById()
 		{
 			string userId = RequestContext.Principal.Identity.GetUserId();
 			UserData data = new UserData();
@@ -24,14 +25,14 @@ namespace RRMDataManager.Controllers
 			return data.GetUserByID( userId ).FirstOrDefault();
 		}
 
-		[Authorize(Roles = "Admin")]
+		[Authorize( Roles = "Admin" )]
 		[HttpGet]
-		[Route ("api/User/Admin/GetAllUsers")]
+		[Route( "api/User/Admin/GetAllUsers" )]
 		public List<ApplicationUserModel> GetAllUsers()
 		{
 			List<ApplicationUserModel> output = new List<ApplicationUserModel>();
 
-			using ( var context = new ApplicationDbContext())
+			using ( var context = new ApplicationDbContext() )
 			{
 				var userStore = new UserStore<ApplicationUser>( context );
 				var userManager = new UserManager<ApplicationUser>( userStore );
@@ -40,11 +41,11 @@ namespace RRMDataManager.Controllers
 				var roles = context.Roles.ToList();
 
 
-				foreach(var user in users)
+				foreach ( var user in users )
 				{
 					ApplicationUserModel u = new ApplicationUserModel
 					{
-						Id = user.Id,
+						Id = user.Id ,
 						Email = user.Email
 					};
 
@@ -58,6 +59,45 @@ namespace RRMDataManager.Controllers
 			}
 
 			return output;
+		}
+
+		[Authorize( Roles = "Admin" )]
+		[HttpGet]
+		[Route( "api/User/Admin/GetAllRoles" )]
+		public Dictionary<string , string> GetAllRoles()
+		{
+			using ( var context = new ApplicationDbContext() )
+			{
+				return context.Roles.ToDictionary( x => x.Id , x => x.Name );
+			}
+		}
+
+		[Authorize( Roles = "Admin" )]
+		[HttpPost]
+		[Route( "api/User/Admin/AddRole" )]
+		public void AddRole( UserRolePair pairing )
+		{
+			using ( var context = new ApplicationDbContext() )
+			{
+				var userStore = new UserStore<ApplicationUser>( context );
+				var userManager = new UserManager<ApplicationUser>( userStore );
+
+				userManager.AddToRole( pairing.UserId , pairing.RoleName );
+			}
+		}
+
+		[Authorize( Roles = "Admin" )]
+		[HttpPost]
+		[Route( "api/User/Admin/RemoveRole" )]
+		public void RemoveRole( UserRolePair pairing )
+		{
+			using ( var context = new ApplicationDbContext() )
+			{
+				var userStore = new UserStore<ApplicationUser>( context );
+				var userManager = new UserManager<ApplicationUser>( userStore );
+
+				userManager.RemoveFromRole( pairing.UserId , pairing.RoleName );
+			}
 		}
 	}
 }

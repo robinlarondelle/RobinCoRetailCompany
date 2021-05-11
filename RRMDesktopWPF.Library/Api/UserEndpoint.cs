@@ -32,24 +32,44 @@ namespace RRMDesktopWPF.Library.Api
 					throw new Exception( response.ReasonPhrase );
 				}
 			}
-
-
 		}
 
-		/*		public async Task<List<ProductModel>> GetAllProductsAsync()
+		public async Task<Dictionary<string , string>> GetAllRoles()
+		{
+			using ( HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync( "/api/User/Admin/GetAllRoles" ) )
+			{
+				if ( response.IsSuccessStatusCode )
 				{
-					using ( HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync( "/api/Product" ) )
-					{
-						if ( response.IsSuccessStatusCode )
-						{
-							List<ProductModel> result = await response.Content.ReadAsAsync<List<ProductModel>>();
-							return result;
-						}
-						else
-						{
-							throw new Exception( response.ReasonPhrase );
-						}
-					}
-				}*/
+					var result = await response.Content.ReadAsAsync<Dictionary<string , string>>();
+					return result;
+				}
+				else
+				{
+					throw new Exception( response.ReasonPhrase );
+				}
+			}
+		}
+
+		public async Task AddUserToRole( string userId , string roleName )
+		{
+			using ( HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync( "/api/User/Admin/AddRole" , new { userId , roleName } ) )
+			{
+				if ( !response.IsSuccessStatusCode )
+				{
+					throw new Exception( response.ReasonPhrase );
+				}
+			}
+		}
+
+		public async Task RemoveUserFromRole( string userId , string roleName )
+		{
+			using ( HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync( "/api/User/Admin/RemoveRole" , new { userId , roleName } ) )
+			{
+				if ( !response.IsSuccessStatusCode )
+				{
+					throw new Exception( response.ReasonPhrase );
+				}
+			}
+		}
 	}
 }

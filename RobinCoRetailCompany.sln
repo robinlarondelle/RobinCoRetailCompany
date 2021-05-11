@@ -18,6 +18,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{A731AEEE-224D-4538-8261-2EF1E1F79EFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{1B5A8A50-8662-416E-A31B-8B84FF93F96E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{73BD81A0-88CA-4AB8-B224-7D02CECAE7F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +55,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B1697578-F97A-474B-B4FD-ABD1BF70C3D3} = {1B5A8A50-8662-416E-A31B-8B84FF93F96E}
+		{F2432946-9CB9-4F46-9B8E-F021036AA248} = {73BD81A0-88CA-4AB8-B224-7D02CECAE7F5}
+		{0BF4F018-CE03-4B2F-BDAD-45626D1BEBF6} = {1B5A8A50-8662-416E-A31B-8B84FF93F96E}
+		{8B856749-9BB8-4C9E-B004-871374DC3753} = {A731AEEE-224D-4538-8261-2EF1E1F79EFD}
+		{26F42374-690C-4A96-9F12-0A13789809D7} = {73BD81A0-88CA-4AB8-B224-7D02CECAE7F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC799401-3D17-48AB-9631-5ACF9C2B1951}
