@@ -38,6 +38,8 @@ namespace RRMDesktopWPF.ViewModels
 			NotifyOfPropertyChange( () => IsLoggedIn );
 		}
 
+		public void UserManagement() => ActivateItemAsync( IoC.Get<UserDisplayViewModel>() );
+
 		public Task HandleAsync( LoginEvent message , CancellationToken cancellationToken )
 		{
 			ActivateItemAsync( _salesViewModel );

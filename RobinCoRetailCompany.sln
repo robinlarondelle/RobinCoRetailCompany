@@ -13,6 +13,11 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "RRMData", "RRMData\RRMData.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRMDataManager", "RRMDataManager\RRMDataManager.csproj", "{26F42374-690C-4A96-9F12-0A13789809D7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F2AFC129-CE58-45C3-985B-CF72D5BBDF9B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -51,7 +51,8 @@ namespace RRMDesktopWPF
 			_container
 				.Instance( _container )
 				.PerRequest<IProductEndpoint , ProductEndpoint>()
-				.PerRequest<ISaleEndpoint , SaleEndpoint>();
+				.PerRequest<ISaleEndpoint , SaleEndpoint>()
+				.PerRequest<IUserEndpoint , UserEndpoint>();
 
 			//Tell the DI container what concrete implementations to use for each Interface
 			_container
